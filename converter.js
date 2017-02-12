@@ -1,8 +1,8 @@
 class RGB {
 	constructor(r, g, b) {
-		this._r = r;
-		this._g = g;
-		this._b = b;
+		this.r = r;
+		this.g = g;
+		this.b = b;
 	}
 
 	/* Getters */
@@ -135,9 +135,9 @@ class RGB {
 
 class Hex {
 	constructor(r, g, b) {
-		this._r = r;
-		this._g = g;
-		this._b = b;
+		this.r = r;
+		this.g = g;
+		this.b = b;
 	}
 
 	/* Getters */
@@ -205,10 +205,10 @@ class Hex {
 
 class CMYK {
 	constructor(c, m, y, k) {
-		this._c = c;
-		this._m = m;
-		this._y = y;
-		this._k = k;
+		this.c = c;
+		this.m = m;
+		this.y = y;
+		this.k = k;
 	}
 
 	/* Getters */
@@ -285,9 +285,9 @@ class CMYK {
 
 class HSV {
 	constructor(h, s, v) {
-		this._h = h;
-		this._s = s;
-		this._v = v;
+		this.h = h;
+		this.s = s;
+		this.v = v;
 	}
 
 	/* Getters */
@@ -395,9 +395,9 @@ class HSV {
 
 class HSL {
 	constructor(h, s, l) {
-		this._h = h;
-		this._s = s;
-		this._l = l;
+		this.h = h;
+		this.s = s;
+		this.l = l;
 	}
 
 	/* Getters */
