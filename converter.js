@@ -43,10 +43,10 @@ class RGB {
 		else if(max === r) {
 			h = 60 * (((g - b) / delta) % 6);
 		}
-		else if(max = g_) {
+		else if(max = g) {
 			h = 60 * (((b - r) / delta) + 2);
 		}
-		else if(max = b_) {
+		else if(max = b) {
 			h = 60 * (((r - g) / delta) + 4);
 		}
 
@@ -56,6 +56,10 @@ class RGB {
 	_clampBetween(lower, upper, value) {
 		value = Math.max(lower, value);
 		return Math.min(value, upper);
+	}
+
+	toString() {
+		return ''.concat("rgb(", this.r, ', ', this.g, ', ', this.b, ')');
 	}
 
 	toRGB() {
@@ -117,7 +121,7 @@ class RGB {
 		let min = Math.min(r_, g_, b_);
 		let delta = max - min;
 
-		let h = this.calcHue(r_, g_, b_, max, delta);
+		let h = this._calcHue(r_, g_, b_, max, delta);
 
 		let l = (max + min) / 2;
 
@@ -169,6 +173,10 @@ class Hex {
 	}
 
 	/* Methods */
+
+	toString() {
+		return ''.concat('#', this.r, this.g, this.b);
+	}
 
 	toRGB() {
 		let r = parseInt(this.r, 16);
@@ -249,6 +257,13 @@ class CMYK {
 
 	/* Methods */
 
+	toString() {
+		let toPercent = function(float) {
+			return Math.round(float * 100);
+		}
+		return ''.concat("cmyk(", toPercent(this.c), '%, ', toPercent(this.m), '%, ', toPercent(this.y), '%, ', toPercent(this.k), '%)');
+	}
+
 	toRGB() {
 		/* http://www.rapidtables.com/convert/color/cmyk-to-rgb.htm */
 		let r = 255 * (1 - this.c) * (1 - this.k);
@@ -319,6 +334,13 @@ class HSV {
 	}
 
 	/* Methods */
+
+	toString() {
+		let toPercent = function(float) {
+			return Math.round(float * 100);
+		}
+		return ''.concat("hsl(", this.h, ', ', toPercent(this.s), '%, ', toPercent(this.l), '%)');
+	}
 
 	toRGB() {
 		/* http://www.rapidtables.com/convert/color/hsv-to-rgb.htm */
