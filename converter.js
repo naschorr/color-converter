@@ -7,16 +7,16 @@ class Color {
 
 	/* Getters */
 
-	get propertyUpdateCallback() {
-		return this._propertyUpdateCallback;
+	get updatePropertyCallback() {
+		return this._updatePropertyCallback;
 	}
 
 	/* Setters */
 
-	set propertyUpdateCallback(func) {
+	set updatePropertyCallback(func) {
 		// http://stackoverflow.com/a/6000016
 		if (!!(func && func.constructor && func.call && func.apply)) {
-			this._propertyUpdateCallback = func;
+			this._updatePropertyCallback = func;
 		}
 	}
 
@@ -30,10 +30,14 @@ class Color {
 		return (0 <= value && value <= 359);
 	}
 
-	attemptInvokePropertyUpdateCallback(propertyName) {
-		if(this.propertyUpdateCallback) {
-			this.propertyUpdateCallback(propertyName);
+	attemptInvokeUpdatePropertyCallback(propertyName) {
+		if(this.updatePropertyCallback) {
+			this.updatePropertyCallback(propertyName);
 		}
+	}
+
+	_toInt(value) {
+		return Math.floor(value);
 	}
 
 	/* Conversion Methods */
@@ -61,13 +65,13 @@ class Color {
 
 class RGB extends Color {
 	// r, g, b all ints between 0 and 255 (inclusive)
-	constructor(r, g, b, propertyUpdateCallback) {
+	constructor(r, g, b, updatePropertyCallback) {
 		super();
 
 		this.r = r;
 		this.g = g;
 		this.b = b;
-		this.propertyUpdateCallback = propertyUpdateCallback;
+		this.updatePropertyCallback = updatePropertyCallback;
 	}
 
 	/* Getters */
@@ -87,23 +91,26 @@ class RGB extends Color {
 	/* Setters */
 
 	set r(value) {
+		value = this._toInt(value);
 		if(this._validateRGB(value)) {
 			this._r = value;
-			this.attemptInvokePropertyUpdateCallback('r');
+			this.attemptInvokeUpdatePropertyCallback('r');
 		}
 	}
 
 	set g(value) {
+		value = this._toInt(value);
 		if(this._validateRGB(value)) {
 			this._g = value;
-			this.attemptInvokePropertyUpdateCallback('g');
+			this.attemptInvokeUpdatePropertyCallback('g');
 		}
 	}
 
 	set b(value) {
+		value = this._toInt(value);
 		if(this._validateRGB(value)) {
 			this._b = value;
-			this.attemptInvokePropertyUpdateCallback('b');
+			this.attemptInvokeUpdatePropertyCallback('b');
 		}
 	}
 
@@ -142,9 +149,20 @@ class RGB extends Color {
 	}
 
 	toHex() {
-		let r = this.r.toString(16);
-		let g = this.g.toString(16);
-		let b = this.b.toString(16);
+		let tryHexConversion = function(value) {
+			try {
+				return value.toString(16);
+			}
+			catch (e) {
+				if(e instanceof TypeError) {
+					return undefined;
+				}
+			}
+		}
+
+		let r = tryHexConversion(this.r);
+		let g = tryHexConversion(this.g);
+		let b = tryHexConversion(this.b);
 
 		return new Hex(r, g, b);
 	}
@@ -214,27 +232,42 @@ class RGB extends Color {
 
 class Hex extends Color {
 	// r, g, b all hex strings between 00 and FF (inclusive)
-	constructor(r, g, b, propertyUpdateCallback) {
+	constructor(r, g, b, updatePropertyCallback) {
 		super();
 
 		this.r = r;
 		this.g = g;
 		this.b = b;
-		this.propertyUpdateCallback = propertyUpdateCallback;
+		this.updatePropertyCallback = updatePropertyCallback;
 	}
 
 	/* Getters */
 
 	get r() {
-		return this._r;
+		if(this._hex) {
+			return this._hex.slice(0, 2);
+		}
+		else {
+			return "00"
+		}
 	}
 
 	get g() {
-		return this._g;
+		if(this._hex) {
+			return this._hex.slice(2, 4);
+		}
+		else {
+			return "00"
+		}
 	}
 
 	get b() {
-		return this._b;
+		if(this._hex) {
+			return this._hex.slice(4, 6);
+		}
+		else {
+			return "00"
+		}
 	}
 
 	get hex() {
@@ -245,40 +278,50 @@ class Hex extends Color {
 
 	set r(value) {
 		if(this._validateHexComponent(value)) {
-			this._r = value;
-			this.attemptInvokePropertyUpdateCallback('r');
+			this._hex = ''.concat(this._padBegin(value, 2, '0'), this.g, this.b)
+			this.attemptInvokeUpdatePropertyCallback('r');
 		}
 	}
 
 	set g(value) {
 		if(this._validateHexComponent(value)) {
-			this._g = value;
-			this.attemptInvokePropertyUpdateCallback('g');
+			this._g = ''.concat(this.r, this._padBegin(value, 2, '0'), this.b);
+			this.attemptInvokeUpdatePropertyCallback('g');
 		}
 	}
 
 	set b(value) {
 		if(this._validateHexComponent(value)) {
-			this._b = value;
-			this.attemptInvokePropertyUpdateCallback('b');
+			this._b = ''.concat(this.r, this.g, this._padBegin(value, 2, '0'));
+			this.attemptInvokeUpdatePropertyCallback('b');
 		}
 	}
 
 	set hex(value) {
 		if(this._validateHex(value)) {
 			this._hex = value;
-			this.attemptInvokePropertyUpdateCallback("hex");
+			this.attemptInvokeUpdatePropertyCallback("hex");
 		}
 	}
 
 	/* Methods */
+
+	_padBegin(string, length, padChar) {
+		while(string.length < length) {
+			string = padChar.concat(string);
+		}
+
+		return string;
+	}
 
 	_validateHex(hexString) {
 		return /[0-9a-fA-F]{1,6}/.test(hexString);
 	}
 
 	_validateHexComponent(hexString) {
-		return (this._validateHex(hexString) && hexString.length <= 2)
+		if(hexString) {
+			return (this._validateHex(hexString) && hexString.length <= 2)
+		}
 	}
 
 	toString() {
@@ -302,14 +345,14 @@ class Hex extends Color {
 
 class CMYK extends Color {
 	// c, m, y, k all normalized floats between 0.0 and 1.0 (inclusive)
-	constructor(c, m, y, k, propertyUpdateCallback) {
+	constructor(c, m, y, k, updatePropertyCallback) {
 		super();
 
 		this.c = c;
 		this.m = m;
 		this.y = y;
 		this.k = k;
-		this.propertyUpdateCallback = propertyUpdateCallback;
+		this.updatePropertyCallback = updatePropertyCallback;
 	}
 
 	/* Getters */
@@ -335,28 +378,28 @@ class CMYK extends Color {
 	set c(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._c = value;
-			this.attemptInvokePropertyUpdateCallback('c');
+			this.attemptInvokeUpdatePropertyCallback('c');
 		}
 	}
 
 	set m(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._m = value;
-			this.attemptInvokePropertyUpdateCallback('m');
+			this.attemptInvokeUpdatePropertyCallback('m');
 		}
 	}
 
 	set y(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._y = value;
-			this.attemptInvokePropertyUpdateCallback('y');
+			this.attemptInvokeUpdatePropertyCallback('y');
 		}
 	}
 
 	set k(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._k = value;
-			this.attemptInvokePropertyUpdateCallback('k');
+			this.attemptInvokeUpdatePropertyCallback('k');
 		}
 	}
 
@@ -384,13 +427,13 @@ class CMYK extends Color {
 
 class HSL extends Color {
 	// h = int between 0 and 359 (inclusive), s, l normalized floats between 0.0 and 1.0 (inclusive)
-	constructor(h, s, l, propertyUpdateCallback) {
+	constructor(h, s, l, updatePropertyCallback) {
 		super();
 
 		this.h = h;
 		this.s = s;
 		this.l = l;
-		this.propertyUpdateCallback = propertyUpdateCallback;
+		this.updatePropertyCallback = updatePropertyCallback;
 	}
 
 	/* Getters */
@@ -410,23 +453,23 @@ class HSL extends Color {
 	/* Setters */
 
 	set h(value) {
-		if(this._validateDegrees(values)) {
-			this._h = values;
-			this.attemptInvokePropertyUpdateCallback('h');
+		if(this._validateDegrees(value)) {
+			this._h = value;
+			this.attemptInvokeUpdatePropertyCallback('h');
 		}
 	}
 
 	set s(value) {
-		if(this._validateNormalizedFloat(values)) {
-			this._s = values;
-			this.attemptInvokePropertyUpdateCallback('s');
+		if(this._validateNormalizedFloat(value)) {
+			this._s = value;
+			this.attemptInvokeUpdatePropertyCallback('s');
 		}
 	}
 
 	set l(value) {
-		if(this._validateNormalizedFloat(values)) {
-			this._l = values;
-			this.attemptInvokePropertyUpdateCallback('l');
+		if(this._validateNormalizedFloat(value)) {
+			this._l = value;
+			this.attemptInvokeUpdatePropertyCallback('l');
 		}
 	}
 
@@ -491,13 +534,13 @@ class HSL extends Color {
 
 class HSV extends Color {
 	// h = int between 0 and 359 (inclusive), s, v normalized floats between 0.0 and 1.0 (inclusive)
-	constructor(h, s, v, propertyUpdateCallback) {
+	constructor(h, s, v, updatePropertyCallback) {
 		super();
 
 		this.h = h;
 		this.s = s;
 		this.v = v;
-		this.propertyUpdateCallback = propertyUpdateCallback;
+		this.updatePropertyCallback = updatePropertyCallback;
 	}
 
 	/* Getters */
@@ -517,23 +560,23 @@ class HSV extends Color {
 	/* Setters */
 
 	set h(value) {
-		if(this._validateDegrees(values)) {
-			this._h = values;
-			this.attemptInvokePropertyUpdateCallback('h');
+		if(this._validateDegrees(value)) {
+			this._h = value;
+			this.attemptInvokeUpdatePropertyCallback('h');
 		}
 	}
 
 	set s(value) {
-		if(this._validateNormalizedFloat(values)) {
-			this._s = values;
-			this.attemptInvokePropertyUpdateCallback('s');
+		if(this._validateNormalizedFloat(value)) {
+			this._s = value;
+			this.attemptInvokeUpdatePropertyCallback('s');
 		}
 	}
 
 	set v(value) {
-		if(this._validateNormalizedFloat(values)) {
-			this._v = values;
-			this.attemptInvokePropertyUpdateCallback('v');
+		if(this._validateNormalizedFloat(value)) {
+			this._v = value;
+			this.attemptInvokeUpdatePropertyCallback('v');
 		}
 	}
 
