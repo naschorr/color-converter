@@ -15,7 +15,7 @@ class Color {
 
 	set updatePropertyCallback(func) {
 		// http://stackoverflow.com/a/6000016
-		if (!!(func && func.constructor && func.call && func.apply)) {
+		if (!!(func && func.constructor && func.call && func.apply)) {	// eslint-disable-line no-extra-boolean-cast
 			this._updatePropertyCallback = func;
 		}
 	}
@@ -94,7 +94,7 @@ class RGB extends Color {
 		value = this._toInt(value);
 		if(this._validateRGB(value)) {
 			this._r = value;
-			this.attemptInvokeUpdatePropertyCallback('r');
+			this.attemptInvokeUpdatePropertyCallback("r");
 		}
 	}
 
@@ -102,7 +102,7 @@ class RGB extends Color {
 		value = this._toInt(value);
 		if(this._validateRGB(value)) {
 			this._g = value;
-			this.attemptInvokeUpdatePropertyCallback('g');
+			this.attemptInvokeUpdatePropertyCallback("g");
 		}
 	}
 
@@ -110,7 +110,7 @@ class RGB extends Color {
 		value = this._toInt(value);
 		if(this._validateRGB(value)) {
 			this._b = value;
-			this.attemptInvokeUpdatePropertyCallback('b');
+			this.attemptInvokeUpdatePropertyCallback("b");
 		}
 	}
 
@@ -139,7 +139,7 @@ class RGB extends Color {
 	}
 
 	toString() {
-		return ''.concat("rgb(", this.r, ', ', this.g, ', ', this.b, ')');
+		return "".concat("rgb(", this.r, ", ", this.g, ", ", this.b, ")");
 	}
 
 	/* Conversion Methods */
@@ -158,7 +158,7 @@ class RGB extends Color {
 					return undefined;
 				}
 			}
-		}
+		};
 
 		let r = tryHexConversion(this.r);
 		let g = tryHexConversion(this.g);
@@ -248,7 +248,7 @@ class Hex extends Color {
 			return this._hex.slice(0, 2);
 		}
 		else {
-			return "00"
+			return "00";
 		}
 	}
 
@@ -257,7 +257,7 @@ class Hex extends Color {
 			return this._hex.slice(2, 4);
 		}
 		else {
-			return "00"
+			return "00";
 		}
 	}
 
@@ -266,7 +266,7 @@ class Hex extends Color {
 			return this._hex.slice(4, 6);
 		}
 		else {
-			return "00"
+			return "00";
 		}
 	}
 
@@ -278,22 +278,22 @@ class Hex extends Color {
 
 	set r(value) {
 		if(this._validateHexComponent(value)) {
-			this._hex = ''.concat(this._padBegin(value, 2, '0'), this.g, this.b)
-			this.attemptInvokeUpdatePropertyCallback('r');
+			this._hex = "".concat(this._padBegin(value, 2, "0"), this.g, this.b);
+			this.attemptInvokeUpdatePropertyCallback("r");
 		}
 	}
 
 	set g(value) {
 		if(this._validateHexComponent(value)) {
-			this._g = ''.concat(this.r, this._padBegin(value, 2, '0'), this.b);
-			this.attemptInvokeUpdatePropertyCallback('g');
+			this._g = "".concat(this.r, this._padBegin(value, 2, "0"), this.b);
+			this.attemptInvokeUpdatePropertyCallback("g");
 		}
 	}
 
 	set b(value) {
 		if(this._validateHexComponent(value)) {
-			this._b = ''.concat(this.r, this.g, this._padBegin(value, 2, '0'));
-			this.attemptInvokeUpdatePropertyCallback('b');
+			this._b = "".concat(this.r, this.g, this._padBegin(value, 2, "0"));
+			this.attemptInvokeUpdatePropertyCallback("b");
 		}
 	}
 
@@ -320,12 +320,12 @@ class Hex extends Color {
 
 	_validateHexComponent(hexString) {
 		if(hexString) {
-			return (this._validateHex(hexString) && hexString.length <= 2)
+			return (this._validateHex(hexString) && hexString.length <= 2);
 		}
 	}
 
 	toString() {
-		return ''.concat('#', this.r, this.g, this.b);
+		return "".concat("#", this.r, this.g, this.b);
 	}
 
 	/* Conversion Methods */
@@ -378,35 +378,35 @@ class CMYK extends Color {
 	set c(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._c = value;
-			this.attemptInvokeUpdatePropertyCallback('c');
+			this.attemptInvokeUpdatePropertyCallback("c");
 		}
 	}
 
 	set m(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._m = value;
-			this.attemptInvokeUpdatePropertyCallback('m');
+			this.attemptInvokeUpdatePropertyCallback("m");
 		}
 	}
 
 	set y(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._y = value;
-			this.attemptInvokeUpdatePropertyCallback('y');
+			this.attemptInvokeUpdatePropertyCallback("y");
 		}
 	}
 
 	set k(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._k = value;
-			this.attemptInvokeUpdatePropertyCallback('k');
+			this.attemptInvokeUpdatePropertyCallback("k");
 		}
 	}
 
 	/* Methods */
 
 	toString() {
-		return ''.concat("cmyk(", this.c, '%, ', this.m, '%, ', this.y, '%, ', this.k, '%)');
+		return "".concat("cmyk(", this.c, "%, ", this.m, "%, ", this.y, "%, ", this.k, "%)");
 	}
 
 	/* Conversion Methods */
@@ -455,21 +455,21 @@ class HSL extends Color {
 	set h(value) {
 		if(this._validateDegrees(value)) {
 			this._h = value;
-			this.attemptInvokeUpdatePropertyCallback('h');
+			this.attemptInvokeUpdatePropertyCallback("h");
 		}
 	}
 
 	set s(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._s = value;
-			this.attemptInvokeUpdatePropertyCallback('s');
+			this.attemptInvokeUpdatePropertyCallback("s");
 		}
 	}
 
 	set l(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._l = value;
-			this.attemptInvokeUpdatePropertyCallback('l');
+			this.attemptInvokeUpdatePropertyCallback("l");
 		}
 	}
 
@@ -562,21 +562,21 @@ class HSV extends Color {
 	set h(value) {
 		if(this._validateDegrees(value)) {
 			this._h = value;
-			this.attemptInvokeUpdatePropertyCallback('h');
+			this.attemptInvokeUpdatePropertyCallback("h");
 		}
 	}
 
 	set s(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._s = value;
-			this.attemptInvokeUpdatePropertyCallback('s');
+			this.attemptInvokeUpdatePropertyCallback("s");
 		}
 	}
 
 	set v(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._v = value;
-			this.attemptInvokeUpdatePropertyCallback('v');
+			this.attemptInvokeUpdatePropertyCallback("v");
 		}
 	}
 
@@ -627,9 +627,9 @@ class HSV extends Color {
 			b_ = x;
 		}
 
-		let r = (r_ + this.m) * 255;
-		let g = (g_ + this.m) * 255;
-		let b = (b_ + this.m) * 255;
+		let r = (r_ + m) * 255;
+		let g = (g_ + m) * 255;
+		let b = (b_ + m) * 255;
 
 		return new RGB(r, g, b);		
 	}
