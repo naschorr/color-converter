@@ -94,24 +94,24 @@ class RGB extends Color {
 		value = this._toInt(value);
 		if(this._validateRGB(value)) {
 			this._r = value;
-			this.attemptInvokeUpdatePropertyCallback("r");
 		}
+		this.attemptInvokeUpdatePropertyCallback("r");
 	}
 
 	set g(value) {
 		value = this._toInt(value);
 		if(this._validateRGB(value)) {
 			this._g = value;
-			this.attemptInvokeUpdatePropertyCallback("g");
 		}
+		this.attemptInvokeUpdatePropertyCallback("g");
 	}
 
 	set b(value) {
 		value = this._toInt(value);
 		if(this._validateRGB(value)) {
 			this._b = value;
-			this.attemptInvokeUpdatePropertyCallback("b");
 		}
+		this.attemptInvokeUpdatePropertyCallback("b");
 	}
 
 	/* Methods */
@@ -244,8 +244,8 @@ class Hex extends Color {
 	/* Getters */
 
 	get r() {
-		if(this._hex) {
-			return this._hex.slice(0, 2);
+		if(this._r) {
+			return this._r;
 		}
 		else {
 			return "00";
@@ -253,8 +253,8 @@ class Hex extends Color {
 	}
 
 	get g() {
-		if(this._hex) {
-			return this._hex.slice(2, 4);
+		if(this._g) {
+			return this._g;
 		}
 		else {
 			return "00";
@@ -262,8 +262,8 @@ class Hex extends Color {
 	}
 
 	get b() {
-		if(this._hex) {
-			return this._hex.slice(4, 6);
+		if(this._b) {
+			return this._b;
 		}
 		else {
 			return "00";
@@ -271,37 +271,37 @@ class Hex extends Color {
 	}
 
 	get hex() {
-		return this._hex;
+		return "".concat(this.r, this.g, this.b);
 	}
 
 	/* Setters */
 
 	set r(value) {
 		if(this._validateHexComponent(value)) {
-			this._hex = "".concat(this._padBegin(value, 2, "0"), this.g, this.b);
-			this.attemptInvokeUpdatePropertyCallback("r");
+			this._r = this._padBegin(value, 2, "0");
 		}
+		this.attemptInvokeUpdatePropertyCallback("r");
 	}
 
 	set g(value) {
 		if(this._validateHexComponent(value)) {
-			this._g = "".concat(this.r, this._padBegin(value, 2, "0"), this.b);
-			this.attemptInvokeUpdatePropertyCallback("g");
+			this._g = this._padBegin(value, 2, "0");
 		}
+		this.attemptInvokeUpdatePropertyCallback("g");
 	}
 
 	set b(value) {
 		if(this._validateHexComponent(value)) {
-			this._b = "".concat(this.r, this.g, this._padBegin(value, 2, "0"));
-			this.attemptInvokeUpdatePropertyCallback("b");
+			this._b = this._padBegin(value, 2, "0");
 		}
+		this.attemptInvokeUpdatePropertyCallback("b");
 	}
 
 	set hex(value) {
-		if(this._validateHex(value)) {
-			this._hex = value;
-			this.attemptInvokeUpdatePropertyCallback("hex");
-		}
+		this.r = value.slice(0, 2);
+		this.g = value.slice(2, 4);
+		this.b = value.slice(4, 6);
+		this.attemptInvokeUpdatePropertyCallback("hex");
 	}
 
 	/* Methods */
@@ -378,29 +378,29 @@ class CMYK extends Color {
 	set c(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._c = value;
-			this.attemptInvokeUpdatePropertyCallback("c");
 		}
+		this.attemptInvokeUpdatePropertyCallback("c");
 	}
 
 	set m(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._m = value;
-			this.attemptInvokeUpdatePropertyCallback("m");
 		}
+		this.attemptInvokeUpdatePropertyCallback("m");
 	}
 
 	set y(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._y = value;
-			this.attemptInvokeUpdatePropertyCallback("y");
 		}
+		this.attemptInvokeUpdatePropertyCallback("y");
 	}
 
 	set k(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._k = value;
-			this.attemptInvokeUpdatePropertyCallback("k");
 		}
+		this.attemptInvokeUpdatePropertyCallback("k");
 	}
 
 	/* Methods */
@@ -455,22 +455,22 @@ class HSL extends Color {
 	set h(value) {
 		if(this._validateDegrees(value)) {
 			this._h = value;
-			this.attemptInvokeUpdatePropertyCallback("h");
 		}
+		this.attemptInvokeUpdatePropertyCallback("h");
 	}
 
 	set s(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._s = value;
-			this.attemptInvokeUpdatePropertyCallback("s");
 		}
+		this.attemptInvokeUpdatePropertyCallback("s");
 	}
 
 	set l(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._l = value;
-			this.attemptInvokeUpdatePropertyCallback("l");
 		}
+		this.attemptInvokeUpdatePropertyCallback("l");
 	}
 
 	/* Methods */
@@ -562,22 +562,22 @@ class HSV extends Color {
 	set h(value) {
 		if(this._validateDegrees(value)) {
 			this._h = value;
-			this.attemptInvokeUpdatePropertyCallback("h");
 		}
+		this.attemptInvokeUpdatePropertyCallback("h");
 	}
 
 	set s(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._s = value;
-			this.attemptInvokeUpdatePropertyCallback("s");
 		}
+		this.attemptInvokeUpdatePropertyCallback("s");
 	}
 
 	set v(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._v = value;
-			this.attemptInvokeUpdatePropertyCallback("v");
 		}
+		this.attemptInvokeUpdatePropertyCallback("v");
 	}
 
 	/* Methods */
