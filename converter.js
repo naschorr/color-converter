@@ -64,7 +64,7 @@ class Color {
 }
 
 class RGB extends Color {
-	// r, g, b all ints between 0 and 255 (inclusive)
+	// r, g, b all ints between 0 and 255 (inclusive) or undefined
 	constructor(r, g, b, updatePropertyCallback) {
 		super();
 
@@ -91,25 +91,40 @@ class RGB extends Color {
 	/* Setters */
 
 	set r(value) {
-		value = this._toInt(value);
-		if(this._validateRGB(value)) {
-			this._r = value;
+		if(value === undefined) {
+			this._r = undefined;
+		}
+		else {
+			value = this._toInt(value);
+			if(this._validateRGB(value)) {
+				this._r = value;
+			}
 		}
 		this.attemptInvokeUpdatePropertyCallback("r");
 	}
 
 	set g(value) {
-		value = this._toInt(value);
-		if(this._validateRGB(value)) {
-			this._g = value;
+		if(value === undefined) {
+			this._g = undefined;
+		}
+		else {
+			value = this._toInt(value);
+			if(this._validateRGB(value)) {
+				this._g = value;
+			}
 		}
 		this.attemptInvokeUpdatePropertyCallback("g");
 	}
 
 	set b(value) {
-		value = this._toInt(value);
-		if(this._validateRGB(value)) {
-			this._b = value;
+		if(value === undefined) {
+			this._b = undefined;
+		}
+		else {
+			value = this._toInt(value);
+			if(this._validateRGB(value)) {
+				this._b = value;
+			}
 		}
 		this.attemptInvokeUpdatePropertyCallback("b");
 	}
@@ -231,7 +246,7 @@ class RGB extends Color {
 }
 
 class Hex extends Color {
-	// r, g, b all hex strings between 00 and FF (inclusive)
+	// r, g, b all hex strings between 00 and FF (inclusive) or undefined
 	constructor(r, g, b, updatePropertyCallback) {
 		super();
 
@@ -244,29 +259,29 @@ class Hex extends Color {
 	/* Getters */
 
 	get r() {
-		if(this._r) {
-			return this._r;
+		if(this._r === undefined) {
+			return "";
 		}
 		else {
-			return "00";
+			return this._r;
 		}
 	}
 
 	get g() {
-		if(this._g) {
-			return this._g;
+		if(this._g === undefined) {
+			return "";
 		}
 		else {
-			return "00";
+			return this._g;
 		}
 	}
 
 	get b() {
-		if(this._b) {
-			return this._b;
+		if(this._b === undefined) {
+			return "";
 		}
 		else {
-			return "00";
+			return this._b;
 		}
 	}
 
@@ -278,29 +293,65 @@ class Hex extends Color {
 
 	set r(value) {
 		if(this._validateHexComponent(value)) {
-			this._r = this._padBegin(value, 2, "0");
+			if(this.hex.length > 2) {
+				this._r = this._padBegin(value, 2, "0");
+			}
+			else {
+				this._r = value;
+			}
+		}
+		else if(value === undefined) {
+			this._r = undefined;
 		}
 		this.attemptInvokeUpdatePropertyCallback("r");
 	}
 
 	set g(value) {
 		if(this._validateHexComponent(value)) {
-			this._g = this._padBegin(value, 2, "0");
+			if(this.hex.length > 4) {
+				this._g = this._padBegin(value, 2, "0");
+			}
+			else {
+				this._g = value;
+			}
+		}
+		else if(value === undefined) {
+			this._g = undefined;
 		}
 		this.attemptInvokeUpdatePropertyCallback("g");
 	}
 
 	set b(value) {
 		if(this._validateHexComponent(value)) {
-			this._b = this._padBegin(value, 2, "0");
+			if(this.hex.length > 6) {
+				this._b = this._padBegin(value, 2, "0");
+			}
+			else {
+				this._b = value;
+			}
+		}
+		else if(value === undefined) {
+			this._b = undefined;
 		}
 		this.attemptInvokeUpdatePropertyCallback("b");
 	}
 
 	set hex(value) {
-		this.r = value.slice(0, 2);
-		this.g = value.slice(2, 4);
-		this.b = value.slice(4, 6);
+		/* TODO: better name */
+		let calcSliceValue = function(string, start, end) {
+			let result = string.slice(start, end);
+			if(result === "") {
+				return undefined;
+			}
+			else {
+				return result;
+			}
+		};
+
+		this.r = calcSliceValue(value, 0, 2);
+		this.g = calcSliceValue(value, 2, 4);
+		this.b = calcSliceValue(value, 4, 6);
+
 		this.attemptInvokeUpdatePropertyCallback("hex");
 	}
 
@@ -344,7 +395,7 @@ class Hex extends Color {
 }
 
 class CMYK extends Color {
-	// c, m, y, k all normalized floats between 0.0 and 1.0 (inclusive)
+	// c, m, y, k all normalized floats between 0.0 and 1.0 (inclusive) or undefined
 	constructor(c, m, y, k, updatePropertyCallback) {
 		super();
 
@@ -379,12 +430,18 @@ class CMYK extends Color {
 		if(this._validateNormalizedFloat(value)) {
 			this._c = value;
 		}
+		else if(value === undefined) {
+			this._c = undefined;
+		}
 		this.attemptInvokeUpdatePropertyCallback("c");
 	}
 
 	set m(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._m = value;
+		}
+		else if(value === undefined) {
+			this._m = undefined;
 		}
 		this.attemptInvokeUpdatePropertyCallback("m");
 	}
@@ -393,12 +450,18 @@ class CMYK extends Color {
 		if(this._validateNormalizedFloat(value)) {
 			this._y = value;
 		}
+		else if(value === undefined) {
+			this._y = undefined;
+		}
 		this.attemptInvokeUpdatePropertyCallback("y");
 	}
 
 	set k(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._k = value;
+		}
+		else if(value === undefined) {
+			this._k = undefined;
 		}
 		this.attemptInvokeUpdatePropertyCallback("k");
 	}
@@ -426,7 +489,7 @@ class CMYK extends Color {
 }
 
 class HSL extends Color {
-	// h = int between 0 and 359 (inclusive), s, l normalized floats between 0.0 and 1.0 (inclusive)
+	// h = int between 0 and 359 (inclusive) and undefined, s, l normalized floats between 0.0 and 1.0 (inclusive) and undefined
 	constructor(h, s, l, updatePropertyCallback) {
 		super();
 
@@ -456,6 +519,9 @@ class HSL extends Color {
 		if(this._validateDegrees(value)) {
 			this._h = value;
 		}
+		else if(value === undefined) {
+			this._h = undefined;
+		}
 		this.attemptInvokeUpdatePropertyCallback("h");
 	}
 
@@ -463,12 +529,18 @@ class HSL extends Color {
 		if(this._validateNormalizedFloat(value)) {
 			this._s = value;
 		}
+		else if(value === undefined) {
+			this._s = undefined;
+		}
 		this.attemptInvokeUpdatePropertyCallback("s");
 	}
 
 	set l(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._l = value;
+		}
+		else if(value === undefined) {
+			this._l = undefined;
 		}
 		this.attemptInvokeUpdatePropertyCallback("l");
 	}
@@ -533,7 +605,7 @@ class HSL extends Color {
 }
 
 class HSV extends Color {
-	// h = int between 0 and 359 (inclusive), s, v normalized floats between 0.0 and 1.0 (inclusive)
+	// h = int between 0 and 359 (inclusive) and undefined, s, v normalized floats between 0.0 and 1.0 (inclusive) and undefined
 	constructor(h, s, v, updatePropertyCallback) {
 		super();
 
@@ -563,6 +635,9 @@ class HSV extends Color {
 		if(this._validateDegrees(value)) {
 			this._h = value;
 		}
+		else if(value === undefined) {
+			this._h = undefined;
+		}
 		this.attemptInvokeUpdatePropertyCallback("h");
 	}
 
@@ -570,12 +645,18 @@ class HSV extends Color {
 		if(this._validateNormalizedFloat(value)) {
 			this._s = value;
 		}
+		else if(value === undefined) {
+			this._s = undefined;
+		}
 		this.attemptInvokeUpdatePropertyCallback("s");
 	}
 
 	set v(value) {
 		if(this._validateNormalizedFloat(value)) {
 			this._v = value;
+		}
+		else if(value === undefined) {
+			this._v = undefined;
 		}
 		this.attemptInvokeUpdatePropertyCallback("v");
 	}
