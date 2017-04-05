@@ -1,7 +1,7 @@
 class Color {
 	constructor() {
 		if(this.constructor === Color.constructor) {
-			console.error("Abstract class, can't be instantiated.");
+			throw new Error("Abstract class, can't be instantiated.");
 		}
 	}
 
@@ -22,6 +22,18 @@ class Color {
 
 	/* Methods */
 
+	_padBegin(string, length, padChar) {
+		if(!(padChar)){
+			padChar = "0";
+		}
+
+		while(string.length < length) {
+			string = padChar.concat(string);
+		}
+
+		return string;
+	}
+
 	_validateNormalizedFloat(value) {
 		return (0.0 <= value && value <= 1.0);
 	}
@@ -38,6 +50,14 @@ class Color {
 
 	_toInt(value) {
 		return Math.floor(value);
+	}
+
+	_toPercent(value) {
+		return Math.round(value * 100);	
+	}
+
+	toString() {
+
 	}
 
 	/* Conversion Methods */
@@ -154,7 +174,11 @@ class RGB extends Color {
 	}
 
 	toString() {
-		return "".concat("rgb(", this.r, ", ", this.g, ", ", this.b, ")");
+		return "".concat(this.r, ", ", this.g, ", ", this.b);
+	}
+
+	toCSS() {
+		return "".concat("rgb(", this.toString(), ")");
 	}
 
 	/* Conversion Methods */
@@ -164,9 +188,10 @@ class RGB extends Color {
 	}
 
 	toHex() {
+		let self = this;
 		let tryHexConversion = function(value) {
 			try {
-				return value.toString(16);
+				return self._padBegin(value.toString(16), 2, "0");
 			}
 			catch (e) {
 				if(e instanceof TypeError) {
@@ -357,14 +382,6 @@ class Hex extends Color {
 
 	/* Methods */
 
-	_padBegin(string, length, padChar) {
-		while(string.length < length) {
-			string = padChar.concat(string);
-		}
-
-		return string;
-	}
-
 	_validateHex(hexString) {
 		return /[0-9a-fA-F]{1,6}/.test(hexString);
 	}
@@ -376,6 +393,10 @@ class Hex extends Color {
 	}
 
 	toString() {
+		return this.hex;
+	}
+
+	toCSS() {
 		return "".concat("#", this.r, this.g, this.b);
 	}
 
@@ -469,7 +490,12 @@ class CMYK extends Color {
 	/* Methods */
 
 	toString() {
-		return "".concat("cmyk(", this.c, "%, ", this.m, "%, ", this.y, "%, ", this.k, "%)");
+		return "".concat(this._toPercent(this.c), "%, ", this._toPercent(this.m), "%, ", 
+						this._toPercent(this.y), "%, ", this._toPercent(this.k), "%");
+	}
+
+	toCSS() {
+		return "".concat("cmyk(", this.toString(), ")");
 	}
 
 	/* Conversion Methods */
@@ -547,7 +573,13 @@ class HSL extends Color {
 
 	/* Methods */
 
-	//toString(){}
+	toString() {
+		return "".concat(this.h, ", ", this._toPercent(this.s), "%, ", this._toPercent(this.l), "%");
+	}
+
+	toCSS() {
+		return "".concat("hsl(", this.toString(), ")");
+	}
 
 	/* Conversion Methods */
 
@@ -663,7 +695,9 @@ class HSV extends Color {
 
 	/* Methods */
 
-	//toString(){}
+	toString() {
+		return "".concat(this.h, ", ", this._toPercent(this.s), "%, ", this._toPercent(this.v), "%");
+	}
 
 	/* Conversion Methods */
 
