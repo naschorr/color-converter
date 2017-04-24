@@ -598,27 +598,27 @@ class HSL extends Color {
 			g_ = x;
 			b_ = 0;
 		}
-		else if(60 <= h < 120) {
+		else if(60 <= h && h < 120) {
 			r_ = x;
 			g_ = c;
 			b_ = 0;
 		}
-		else if(120 <= h < 180) {
+		else if(120 <= h && h < 180) {
 			r_ = 0;
 			g_ = c;
 			b_ = x;
 		}
-		else if(180 <= h < 240) {
+		else if(180 <= h && h < 240) {
 			r_ = 0;
 			g_ = x;
 			b_ = c;
 		}
-		else if(240 <= h < 300) {
+		else if(240 <= h && h < 300) {
 			r_ = x;
 			g_ = 0;
 			b_ = c;
 		}
-		else if(300 <= h < 360) {
+		else if(300 <= h && h < 360) {
 			r_ = c;
 			g_ = 0;
 			b_ = x;
@@ -716,27 +716,27 @@ class HSV extends Color {
 			g_ = x;
 			b_ = 0;
 		}
-		else if(60 <= h < 120) {
+		else if(60 <= h && h < 120) {
 			r_ = x;
 			g_ = c;
 			b_ = 0;
 		}
-		else if(120 <= h < 180) {
+		else if(120 <= h && h < 180) {
 			r_ = 0;
 			g_ = c;
 			b_ = x;
 		}
-		else if(180 <= h < 240) {
+		else if(180 <= h && h < 240) {
 			r_ = 0;
 			g_ = x;
 			b_ = c;
 		}
-		else if(240 <= h < 300) {
+		else if(240 <= h && h < 300) {
 			r_ = x;
 			g_ = 0;
 			b_ = c;
 		}
-		else if(300 <= h < 360) {
+		else if(300 <= h && h < 360) {
 			r_ = c;
 			g_ = 0;
 			b_ = x;
